@@ -16,15 +16,7 @@ class Validator {
     }
   }
 
-  #isValidateMonthRange() {
-    return this.#inputArray[0] >= 1 && this.#inputArray[0] <= 12;
-  }
-
-  #isValidateWeekdayInput() {
-    const weekDays = ['월', '화', '수', '목', '금', '토', '일'];
-    return weekDays.includes(this.#inputArray[1]);
-  }
-
+  // ['구구','루리','민다']
   validateDutyRoster() {
     if (!this.#isValidateNicknameLength()) {
       throw new Error('[ERROR] 닉네임은 최대 5자입니다.');
@@ -43,7 +35,15 @@ class Validator {
     }
   }
 
-  // ['구구','루리','민다']
+  #isValidateMonthRange() {
+    return this.#inputArray[0] >= 1 && this.#inputArray[0] <= 12;
+  }
+
+  #isValidateWeekdayInput() {
+    const weekDays = ['월', '화', '수', '목', '금', '토', '일'];
+    return weekDays.includes(this.#inputArray[1]);
+  }
+
   #isValidateNicknameLength() {
     return this.#inputArray.every((nickName) => nickName.length <= 5);
   }
@@ -56,3 +56,5 @@ class Validator {
     return this.#inputArray.length <= 35;
   }
 }
+
+export default Validator;
