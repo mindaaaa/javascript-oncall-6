@@ -1,3 +1,5 @@
+import Day from './Day.js';
+
 class Calendar {
   #month;
   #weekday;
@@ -21,7 +23,7 @@ class Calendar {
         weekday: mockedWeekday,
       });
     }
-    return days;
+    return days.map((day) => new Day(day.date, day.weekday));
   }
 }
 
