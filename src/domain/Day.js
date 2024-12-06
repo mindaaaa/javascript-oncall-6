@@ -7,8 +7,8 @@
 // 0은 일 1은 월
 class Day {
   #date;
-  #weekday; // 요일 정보
-  #dayOff; // 휴일인지
+  weekday; // 요일 정보
+  dayOff; // 휴일인지
   #holidays = [
     { month: 1, day: 1, name: '신정' },
     { month: 3, day: 1, name: '삼일절' },
@@ -20,15 +20,16 @@ class Day {
     { month: 12, day: 25, name: '성탄절' },
   ];
 
-  constructor(date) {
-    this.#date = date; // Date 객체
-    this.#weekday = this.getWeekday(); // 요일 정보 ['일']
-    this.#dayOff = this.#isDayOff(); // 휴일인지
+  constructor({ date, weekday }) {
+    this.#date = date; // Date 객체 저장
+    this.weekday = weekday; // 요일 정보 저장
+    console.log('Received date:', date); // 디버깅
+    console.log('Received weekday:', weekday); // 디버깅
+    this.dayOff = this.#isDayOff(); // 휴일인지 판단
   }
 
   getWeekday() {
-    const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
-    return weekdays[this.#date.getDay()];
+    return this.weekday;
   } // 요일 정보를 가져옴
 
   #isDayOff() {
@@ -45,8 +46,7 @@ class Day {
   }
 
   #isWeekend() {
-    // 0이거나 6인지 확인
-    return this.#date.getDay() === 0 || this.#date.getDay() === 6;
+    return this.weekday === '토' || this.weekday === '일';
   }
 
   getMonth() {

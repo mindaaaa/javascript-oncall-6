@@ -13,7 +13,6 @@ class Calendar {
     const startWeekdayIndex = weekdays.indexOf(this.#weekday); // 숫자로
 
     const totalDays = new Date(2001, this.#month, 0).getDate(); // 총 며칠로 이루어져있는가
-    console.log(`${totalDays}`);
     const days = [];
 
     for (let day = 1; day <= totalDays; day++) {
@@ -24,9 +23,8 @@ class Calendar {
         weekday: mockedWeekday,
       });
     }
-    console.log('days:', days);
 
-    return days.map((day) => new Day(day.date, day.weekday));
+    return days.map(({ date, weekday }) => new Day({ date, weekday }));
   }
 }
 
