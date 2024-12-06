@@ -58,5 +58,4 @@ class Day {
   }
 }
 
-// 월 정보 가져와야함
-// 요일 정보 가져와야함
+export default Day;
