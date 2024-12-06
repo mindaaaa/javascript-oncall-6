@@ -9,13 +9,6 @@ class Day {
   #date;
   #weekday; // 요일 정보
   #dayOff; // 휴일인지
-
-  constructor(date) {
-    this.#date = date; // Date 객체
-    this.#weekday = this.getWeekday(); // 요일 정보 ['일']
-    this.#dayOff = this.#isDayOff(); // 휴일인지
-  }
-
   #holidays = [
     { month: 1, day: 1, name: '신정' },
     { month: 3, day: 1, name: '삼일절' },
@@ -27,6 +20,21 @@ class Day {
     { month: 12, day: 25, name: '성탄절' },
   ];
 
+  constructor(date) {
+    this.#date = date; // Date 객체
+    this.#weekday = this.getWeekday(); // 요일 정보 ['일']
+    this.#dayOff = this.#isDayOff(); // 휴일인지
+  }
+
+  getWeekday() {
+    const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+    return weekdays[this.#date.getDay()];
+  } // 요일 정보를 가져옴
+
+  #isDayOff() {
+    return this.isHoliday() || this.#isWeekend();
+  }
+
   isHoliday() {
     return this.#holidays.some((holiday) => {
       return (
@@ -36,23 +44,14 @@ class Day {
     });
   }
 
-  getMonth() {
-    return this.#date.getMonth() + 1;
-  }
-
-  #isDayOff() {
-    return this.isHoliday() || this.#isWeekend();
-  }
-
   #isWeekend() {
     // 0이거나 6인지 확인
     return this.#date.getDay() === 0 || this.#date.getDay() === 6;
   }
 
-  getWeekday() {
-    const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
-    return weekdays[this.#date.getDay()];
-  } // 요일 정보를 가져옴
+  getMonth() {
+    return this.#date.getMonth() + 1;
+  }
 
   get dateArray() {
     return [this.getMonth(), this.#date.getDate()];
