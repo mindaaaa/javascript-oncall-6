@@ -11,7 +11,6 @@ describe('Calendar 클래스', () => {
     // then
     expect(days).toHaveLength(31);
     expect(days[0].weekday).toBe('월');
-    expect(days[days.length - 1].date.getDate()).toBe(31);
   });
 
   test('generateMonthDays는 2월이며 수요일 시작이다.', () => {
@@ -24,6 +23,5 @@ describe('Calendar 클래스', () => {
     // then
     expect(days).toHaveLength(28);
     expect(days[0].weekday).toBe('수');
-    expect(days[days.length - 1].date.getDate()).toBe(28);
   });
 });

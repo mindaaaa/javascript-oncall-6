@@ -33,5 +33,4 @@ export default Calendar;
 const calendar = new Calendar([5, '월']); // 5월, 월요일 시작
 const days = calendar.generateMonthDays();
 
-console.log(new Date(2024, 1, 1));
-console.log('days[0].weekday:', days[0].weekday);
+console.log(days[0].dateArray);

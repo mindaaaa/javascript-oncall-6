@@ -23,8 +23,6 @@ class Day {
   constructor({ date, weekday }) {
     this.#date = date; // Date 객체 저장
     this.weekday = weekday; // 요일 정보 저장
-    console.log('Received date:', date); // 디버깅
-    console.log('Received weekday:', weekday); // 디버깅
     this.dayOff = this.#isDayOff(); // 휴일인지 판단
   }
 
