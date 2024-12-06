@@ -53,6 +53,10 @@ class Day {
     const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
     return weekdays[this.#date.getDay()];
   } // 요일 정보를 가져옴
+
+  get dateArray() {
+    return [this.getMonth(), this.#date.getDate()];
+  }
 }
 
 // 월 정보 가져와야함
