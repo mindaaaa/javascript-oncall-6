@@ -23,31 +23,12 @@ class WeekSchedule {
 
       this.#assignWeekdayWorker();
 
-      // swap하기
-      // this.#holidaySchedule.splice(holidayIndex, 1, this.#holidayScehedule[holid])
-      // 연속 근로자 방지 로직
       if (assignedWorker === previousWorker) {
         if (day.dayOff) {
-          // 다음 휴일 근무자 배정
-          this.#holidaySchedule.splice(
-            holidayIndex,
-            1,
-            this.#holidaySchedule[
-              (holidayIndex + 1) % this.#holidaySchedule.length
-            ] // 수아 루루 글로 -> 루루 수아 글로
-          );
-          assignedWorker = this.#holidaySchedule[currentIndex];
+          this.#resolveHoliday();
         }
-        // 다음 평일 근무자 배정
-        const currentIndex = this.#weekdaySchedule.indexOf(assignedWorker);
-        this.#weekdaySchedule.splice(
-          currentIndex,
-          1,
-          this.#weekdaySchedule[
-            (currentIndex + 1) % this.#weekdaySchedule.length
-          ]
-        );
-        assignedWorker = this.#weekdaySchedule[currentIndex];
+
+        this.#resolveWeekday();
       }
       const scheduleEntry = {
         month: day.dateArray[0],
@@ -87,10 +68,23 @@ class WeekSchedule {
 
   #resolveHoliday() {
     // TODO: 휴일 중복 방지
+    this.#holidaySchedule.splice(
+      holidayIndex,
+      1,
+      this.#holidaySchedule[(holidayIndex + 1) % this.#holidaySchedule.length] // 수아 루루 글로 -> 루루 수아 글로
+    );
+    assignedWorker = this.#holidaySchedule[currentIndex];
   }
 
   #resolveWeekday() {
-    // TODO: 평일 중복 방지
+    // 다음 평일 근무자 배정
+    const currentIndex = this.#weekdaySchedule.indexOf(assignedWorker);
+    this.#weekdaySchedule.splice(
+      currentIndex,
+      1,
+      this.#weekdaySchedule[(currentIndex + 1) % this.#weekdaySchedule.length]
+    );
+    assignedWorker = this.#weekdaySchedule[currentIndex];
   }
 }
 
