@@ -18,17 +18,17 @@ class WeekSchedule {
       let weekdayIndex; // weekDay 배열 index 저장
 
       if (day.dayOff) {
-        this.#assignHolidayWorker(); // 여기서 holidayIndex 넘겨줘야하나?
+        this.#assignHolidayWorker(holidayIndex); //[assignedWorker, holidayIndex]
       }
 
-      this.#assignWeekdayWorker();
+      this.#assignWeekdayWorker(weekdayIndex); // [assignedWorker, weekdayIndex]
 
       if (assignedWorker === previousWorker) {
         if (day.dayOff) {
-          this.#resolveHoliday();
+          this.#resolveHoliday(holidayIndex);
         }
 
-        this.#resolveWeekday();
+        this.#resolveWeekday(weekdayIndex);
       }
       const scheduleEntry = {
         month: day.dateArray[0],
@@ -48,43 +48,46 @@ class WeekSchedule {
     return this.#schedule;
   }
 
-  #assignHolidayWorker() {
+  #assignHolidayWorker(holidayIndex) {
     if (!previousWorker) {
       assignedWorker = this.#holidaySchedule[0];
     }
     assignedWorker = this.#holidaySchedule.indexOf(
       this.#holidaySchedule[holidayIndex + 1]
     );
+
+    holidayIndex = this.#holidaySchedule.indexOf(assignedWorker);
+
+    return [assignedWorker, holidayIndex];
   }
 
-  #assignWeekdayWorker(day) {
+  #assignWeekdayWorker(weekdayIndex) {
     if (!previousWorker) {
       assignedWorker = this.#weekdaySchedule[0];
     }
     assignedWorker = this.#weekdaySchedule.indexOf(
       this.#holidaySchedule[weekdayIndex + 1]
     );
+
+    weekdayIndex = this.#weekdaySchedule.indexOf(assignedWorker);
+
+    return [assignedWorker, weekdayIndex];
   }
 
-  #resolveHoliday() {
-    // TODO: 휴일 중복 방지
-    this.#holidaySchedule.splice(
+  #resolveHoliday(holidayIndex) {
+    this.#holidaySchedule[holidayIndex + 1] = this.#holidaySchedule.splice(
       holidayIndex,
       1,
-      this.#holidaySchedule[(holidayIndex + 1) % this.#holidaySchedule.length] // 수아 루루 글로 -> 루루 수아 글로
-    );
-    assignedWorker = this.#holidaySchedule[currentIndex];
+      this.#holidaySchedule[holidayIndex + 1]
+    )[0];
   }
 
-  #resolveWeekday() {
-    // 다음 평일 근무자 배정
-    const currentIndex = this.#weekdaySchedule.indexOf(assignedWorker);
-    this.#weekdaySchedule.splice(
-      currentIndex,
+  #resolveWeekday(weekdayIndex) {
+    this.#weekdaySchedule[weekdayIndex + 1] = this.#weekdaySchedule.splice(
+      weekdayIndex,
       1,
-      this.#weekdaySchedule[(currentIndex + 1) % this.#weekdaySchedule.length]
-    );
-    assignedWorker = this.#weekdaySchedule[currentIndex];
+      this.#weekdaySchedule[weekdayIndex + 1]
+    )[0];
   }
 }
 
