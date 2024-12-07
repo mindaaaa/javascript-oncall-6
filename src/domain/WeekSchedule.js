@@ -40,16 +40,7 @@ class WeekSchedule {
           );
       }
 
-      const scheduleEntry = {
-        month: day.dateArray[0],
-        day: day.dateArray[1],
-        weekday: day.weekday,
-        worker: assignedWorker,
-      };
-
-      if (day.isHoliday()) {
-        scheduleEntry.note = '(휴일)';
-      }
+      const scheduleEntry = this.#createScheduleEntry(day, assignedWorker);
 
       this.schedule.push(scheduleEntry);
     });
@@ -143,6 +134,21 @@ class WeekSchedule {
     )[0];
 
     return this.#weekdaySchedule[weekdayIndex];
+  }
+
+  #createScheduleEntry(day, assignedWorker) {
+    const scheduleEntry = {
+      month: day.dateArray[0],
+      day: day.dateArray[1],
+      weekday: day.weekday,
+      worker: assignedWorker,
+    };
+
+    if (day.isHoliday()) {
+      scheduleEntry.note = '(휴일)';
+    }
+
+    return scheduleEntry;
   }
 }
 
