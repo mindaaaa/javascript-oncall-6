@@ -2,8 +2,6 @@ class WeekSchedule {
   #holidaySchedule;
   #weekdaySchedule;
 
-  // 휴일은 1부터 시작중
-  // 평일은 준팍만 반복
   constructor({ weekdaySchedule, holidaySchedule }) {
     this.#weekdaySchedule = weekdaySchedule;
     this.#holidaySchedule = holidaySchedule;
@@ -12,23 +10,14 @@ class WeekSchedule {
 
   assignWorkers(days) {
     let previousWorker = null;
-    const originHolidaySchedule = [...this.#holidaySchedule];
-    const originWeekdaySchedule = [...this.#weekdaySchedule];
-    let holidayIndex = 0; // holiday 배열 index 저장
-    let weekdayIndex = 0; // weekDay 배열 index 저장
+    let holidayIndex = 0;
+    let weekdayIndex = 0;
 
     days.forEach((day) => {
       let assignedWorker = null;
 
-      if (holidayIndex === 0) {
-        this.#holidaySchedule = originHolidaySchedule;
-      }
+      this.#resetSchedule(holidayIndex, weekdayIndex);
 
-      if (weekdayIndex === 0) {
-        this.#weekdaySchedule = originWeekdaySchedule;
-      }
-
-      // 휴일일 때
       if (day.dayOff) {
         [previousWorker, assignedWorker, holidayIndex] =
           this.#assignHolidayWorker(
@@ -45,7 +34,6 @@ class WeekSchedule {
         previousWorker = assignedWorker;
       }
 
-      // 평일일 때
       if (!day.dayOff) {
         [previousWorker, assignedWorker, weekdayIndex] =
           this.#assignWeekdayWorker(
@@ -78,6 +66,18 @@ class WeekSchedule {
     return this.schedule;
   }
 
+  #resetSchedule(holidayIndex, weekdayIndex) {
+    const originHolidaySchedule = [...this.#holidaySchedule];
+    const originWeekdaySchedule = [...this.#weekdaySchedule];
+
+    if (holidayIndex === 0) {
+      this.#holidaySchedule = originHolidaySchedule;
+    }
+
+    if (weekdayIndex === 0) {
+      this.#weekdaySchedule = originWeekdaySchedule;
+    }
+  }
   #assignHolidayWorker(previousWorker, assignedWorker, holidayIndex) {
     if (holidayIndex === 0) {
       assignedWorker = this.#holidaySchedule[0];
