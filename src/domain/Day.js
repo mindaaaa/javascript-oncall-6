@@ -1,12 +1,5 @@
-// Date 객체
-// 월이 갖고 있는 모든 일은 Day 클래스다.
-// 평일인지 휴일인지를 판단한다.
-// 배열 형태로 바꿔준다.
-
-// 0은 1월
-// 0은 일 1은 월
 class Day {
-  #date;
+  date;
   weekday; // 요일 정보
   dayOff; // 휴일인지
   #holidays = [
@@ -21,7 +14,7 @@ class Day {
   ];
 
   constructor({ date, weekday }) {
-    this.#date = date; // Date 객체 저장
+    this.date = date; // Date 객체 저장
     this.weekday = weekday; // 요일 정보 저장
     this.dayOff = this.#isDayOff(); // 휴일인지 판단
   }
@@ -37,8 +30,7 @@ class Day {
   isHoliday() {
     return this.#holidays.some((holiday) => {
       return (
-        holiday.month === this.getMonth() &&
-        holiday.day === this.#date.getDate()
+        holiday.month === this.getMonth() && holiday.day === this.date.getDate()
       );
     });
   }
@@ -48,11 +40,11 @@ class Day {
   }
 
   getMonth() {
-    return this.#date.getMonth() + 1;
+    return this.date.getMonth() + 1;
   }
 
   get dateArray() {
-    return [this.getMonth(), this.#date.getDate()];
+    return [this.getMonth(), this.date.getDate()];
   }
 }
 
