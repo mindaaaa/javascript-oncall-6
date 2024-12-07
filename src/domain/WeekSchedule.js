@@ -18,33 +18,44 @@ class WeekSchedule {
     let weekdayIndex = 0;
 
     days.forEach((day) => {
-      let assignedWorker = null;
-
-      this.#resetSchedule(holidayIndex, weekdayIndex);
-
-      if (day.dayOff) {
-        [previousWorker, assignedWorker, holidayIndex] =
-          this.#scheduleHolidayWorker(
-            previousWorker,
-            assignedWorker,
-            holidayIndex
-          );
-      }
-
-      if (!day.dayOff) {
-        [previousWorker, assignedWorker, weekdayIndex] =
-          this.#scheduleWeekdayWorker(
-            previousWorker,
-            assignedWorker,
-            weekdayIndex
-          );
-      }
-
-      const scheduleEntry = this.#createScheduleEntry(day, assignedWorker);
-
-      this.schedule.push(scheduleEntry);
+      [previousWorker, holidayIndex, weekdayIndex] = this.#processDay(
+        day,
+        previousWorker,
+        holidayIndex,
+        weekdayIndex
+      );
     });
+
     return this.schedule;
+  }
+
+  #processDay(day, previousWorker, holidayIndex, weekdayIndex) {
+    let assignedWorker = null;
+
+    this.#resetSchedule(holidayIndex, weekdayIndex);
+
+    if (day.dayOff) {
+      [previousWorker, assignedWorker, holidayIndex] =
+        this.#scheduleHolidayWorker(
+          previousWorker,
+          assignedWorker,
+          holidayIndex
+        );
+    }
+
+    if (!day.dayOff) {
+      [previousWorker, assignedWorker, weekdayIndex] =
+        this.#scheduleWeekdayWorker(
+          previousWorker,
+          assignedWorker,
+          weekdayIndex
+        );
+    }
+
+    const scheduleEntry = this.#createScheduleEntry(day, assignedWorker);
+    this.schedule.push(scheduleEntry);
+
+    return [previousWorker, holidayIndex, weekdayIndex];
   }
 
   #resetSchedule(holidayIndex, weekdayIndex) {
