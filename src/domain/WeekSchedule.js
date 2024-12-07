@@ -1,10 +1,14 @@
 class WeekSchedule {
   #holidaySchedule;
   #weekdaySchedule;
+  #originalHolidaySchedule;
+  #originalWeekdaySchedule;
 
   constructor({ weekdaySchedule, holidaySchedule }) {
     this.#weekdaySchedule = weekdaySchedule;
     this.#holidaySchedule = holidaySchedule;
+    this.#originalWeekdaySchedule = this.#weekdaySchedule;
+    this.#originalHolidaySchedule = this.#holidaySchedule;
     this.schedule = [];
   }
 
@@ -20,18 +24,11 @@ class WeekSchedule {
 
       if (day.dayOff) {
         [previousWorker, assignedWorker, holidayIndex] =
-          this.#assignHolidayWorker(
+          this.#scheduleHolidayWorker(
             previousWorker,
             assignedWorker,
             holidayIndex
           );
-
-        if (assignedWorker === previousWorker) {
-          assignedWorker = this.#resolveHoliday(holidayIndex);
-        }
-
-        holidayIndex += 1;
-        previousWorker = assignedWorker;
       }
 
       if (!day.dayOff) {
@@ -67,17 +64,32 @@ class WeekSchedule {
   }
 
   #resetSchedule(holidayIndex, weekdayIndex) {
-    const originHolidaySchedule = [...this.#holidaySchedule];
-    const originWeekdaySchedule = [...this.#weekdaySchedule];
-
     if (holidayIndex === 0) {
-      this.#holidaySchedule = originHolidaySchedule;
+      this.#holidaySchedule = this.#originalHolidaySchedule;
     }
 
     if (weekdayIndex === 0) {
-      this.#weekdaySchedule = originWeekdaySchedule;
+      this.#weekdaySchedule = this.#originalWeekdaySchedule;
     }
   }
+
+  #scheduleHolidayWorker(previousWorker, assignedWorker, holidayIndex) {
+    [previousWorker, assignedWorker, holidayIndex] = this.#assignHolidayWorker(
+      previousWorker,
+      assignedWorker,
+      holidayIndex
+    );
+
+    if (assignedWorker === previousWorker) {
+      assignedWorker = this.#resolveHoliday(holidayIndex);
+    }
+
+    holidayIndex += 1;
+    previousWorker = assignedWorker;
+
+    return [previousWorker, assignedWorker, holidayIndex];
+  }
+
   #assignHolidayWorker(previousWorker, assignedWorker, holidayIndex) {
     if (holidayIndex === 0) {
       assignedWorker = this.#holidaySchedule[0];
