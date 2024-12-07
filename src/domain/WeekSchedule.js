@@ -1,6 +1,6 @@
 class WeekSchedule {
-  #weekdaySchedule; // 문자열 배열
   #holidaySchedule; // 문자열 배열
+  #weekdaySchedule; // 문자열 배열
   #schedule; // 최종 스케줄
 
   constructor({ weekdaySchedule, holidaySchedule }) {
@@ -11,11 +11,21 @@ class WeekSchedule {
 
   assignWorkers(days) {
     let previousWorker = null; // 전날 근무자
+    const originHolidaySchedule = [...this.#holidaySchedule];
+    const originWeekdaySchedule = [...this.#weekdaySchedule];
 
     days.forEach((day) => {
       let assignedWorker;
       let holidayIndex; // holiday 배열 index 저장
       let weekdayIndex; // weekDay 배열 index 저장
+
+      if (holidayIndex === 0) {
+        this.#holidaySchedule = originHolidaySchedule;
+      }
+
+      if (weekdayIndex === 0) {
+        this.#weekdaySchedule = originWeekdaySchedule;
+      }
 
       if (day.dayOff) {
         [assignedWorker, holidayIndex] =
