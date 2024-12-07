@@ -33,18 +33,11 @@ class WeekSchedule {
 
       if (!day.dayOff) {
         [previousWorker, assignedWorker, weekdayIndex] =
-          this.#assignWeekdayWorker(
+          this.#scheduleWeekdayWorker(
             previousWorker,
             assignedWorker,
             weekdayIndex
           );
-
-        if (assignedWorker === previousWorker) {
-          assignedWorker = this.#resolveWeekday(weekdayIndex);
-        }
-
-        weekdayIndex += 1;
-        previousWorker = assignedWorker;
       }
 
       const scheduleEntry = {
@@ -88,6 +81,22 @@ class WeekSchedule {
     previousWorker = assignedWorker;
 
     return [previousWorker, assignedWorker, holidayIndex];
+  }
+
+  #scheduleWeekdayWorker(previousWorker, assignedWorker, weekdayIndex) {
+    [previousWorker, assignedWorker, weekdayIndex] = this.#assignWeekdayWorker(
+      previousWorker,
+      assignedWorker,
+      weekdayIndex
+    );
+
+    if (assignedWorker === previousWorker) {
+      assignedWorker = this.#resolveWeekday(weekdayIndex);
+    }
+
+    weekdayIndex += 1;
+    previousWorker = assignedWorker;
+    return [previousWorker, assignedWorker, weekdayIndex];
   }
 
   #assignHolidayWorker(previousWorker, assignedWorker, holidayIndex) {
