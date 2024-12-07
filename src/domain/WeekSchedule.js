@@ -1,12 +1,11 @@
 class WeekSchedule {
   #holidaySchedule; // 문자열 배열
   #weekdaySchedule; // 문자열 배열
-  #schedule; // 최종 스케줄
 
   constructor({ weekdaySchedule, holidaySchedule }) {
     this.#weekdaySchedule = weekdaySchedule;
     this.#holidaySchedule = holidaySchedule;
-    this.#schedule = schedule;
+    this.schedule = [];
   }
 
   assignWorkers(days) {
@@ -16,8 +15,8 @@ class WeekSchedule {
 
     days.forEach((day) => {
       let assignedWorker;
-      let holidayIndex; // holiday 배열 index 저장
-      let weekdayIndex; // weekDay 배열 index 저장
+      let holidayIndex = 0; // holiday 배열 index 저장
+      let weekdayIndex = 0; // weekDay 배열 index 저장
 
       if (holidayIndex === 0) {
         this.#holidaySchedule = originHolidaySchedule;
@@ -28,13 +27,21 @@ class WeekSchedule {
       }
 
       if (day.dayOff) {
-        [assignedWorker, holidayIndex] =
-          this.#assignHolidayWorker(holidayIndex); //[assignedWorker, holidayIndex]
+        [assignedWorker, holidayIndex] = this.#assignHolidayWorker(
+          previousWorker,
+          assignedWorker,
+          holidayIndex
+        ); //[assignedWorker, holidayIndex]
+        console.log(assignedWorker);
+        console.log(holidayIndex);
       }
 
       if (!day.dayOff) {
-        [assignedWorker, weekdayIndex] =
-          this.#assignWeekdayWorker(weekdayIndex); // [assignedWorker, weekdayIndex]
+        [assignedWorker, weekdayIndex] = this.#assignWeekdayWorker(
+          previousWorker,
+          assignedWorker,
+          weekdayIndex
+        ); // [assignedWorker, weekdayIndex]
       }
 
       if (assignedWorker === previousWorker) {
@@ -58,18 +65,18 @@ class WeekSchedule {
         scheduleEntry.note = '(휴일)';
       }
 
-      this.#schedule.push(scheduleEntry);
+      this.schedule.push(scheduleEntry);
       previousWorker = assignedWorker;
     });
-    return this.#schedule;
+    return this.schedule;
   }
 
-  #assignHolidayWorker(holidayIndex) {
+  #assignHolidayWorker(previousWorker, assignedWorker, holidayIndex) {
     if (!previousWorker) {
       assignedWorker = this.#holidaySchedule[0];
     }
     assignedWorker = this.#holidaySchedule.indexOf(
-      this.#holidaySchedule[(holidayIndex + 1) % holidayIndex.length]
+      this.#holidaySchedule[(holidayIndex + 1) % this.#holidaySchedule.length]
     );
 
     holidayIndex = this.#holidaySchedule.indexOf(assignedWorker);
@@ -77,12 +84,12 @@ class WeekSchedule {
     return [assignedWorker, holidayIndex];
   }
 
-  #assignWeekdayWorker(weekdayIndex) {
+  #assignWeekdayWorker(previousWorker, assignedWorker, weekdayIndex) {
     if (!previousWorker) {
       assignedWorker = this.#weekdaySchedule[0];
     }
     assignedWorker = this.#weekdaySchedule.indexOf(
-      this.#holidaySchedule[(weekdayIndex + 1) % weekdayIndex.length]
+      this.#weekdaySchedule[(weekdayIndex + 1) % this.#weekdaySchedule.length]
     );
 
     weekdayIndex = this.#weekdaySchedule.indexOf(assignedWorker);
