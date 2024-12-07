@@ -1,7 +1,9 @@
 class WeekSchedule {
-  #holidaySchedule; // 문자열 배열
-  #weekdaySchedule; // 문자열 배열
+  #holidaySchedule;
+  #weekdaySchedule;
 
+  // 휴일은 1부터 시작중
+  // 평일은 준팍만 반복
   constructor({ weekdaySchedule, holidaySchedule }) {
     this.#weekdaySchedule = weekdaySchedule;
     this.#holidaySchedule = holidaySchedule;
@@ -9,14 +11,14 @@ class WeekSchedule {
   }
 
   assignWorkers(days) {
-    let previousWorker = null; // 전날 근무자
+    let previousWorker = null;
     const originHolidaySchedule = [...this.#holidaySchedule];
     const originWeekdaySchedule = [...this.#weekdaySchedule];
+    let holidayIndex = 0; // holiday 배열 index 저장
+    let weekdayIndex = 0; // weekDay 배열 index 저장
 
     days.forEach((day) => {
-      let assignedWorker;
-      let holidayIndex = 0; // holiday 배열 index 저장
-      let weekdayIndex = 0; // weekDay 배열 index 저장
+      let assignedWorker = null;
 
       if (holidayIndex === 0) {
         this.#holidaySchedule = originHolidaySchedule;
@@ -26,32 +28,38 @@ class WeekSchedule {
         this.#weekdaySchedule = originWeekdaySchedule;
       }
 
+      // 휴일일 때
       if (day.dayOff) {
-        [assignedWorker, holidayIndex] = this.#assignHolidayWorker(
-          previousWorker,
-          assignedWorker,
-          holidayIndex
-        ); //[assignedWorker, holidayIndex]
-        console.log(assignedWorker);
-        console.log(holidayIndex);
-      }
+        [previousWorker, assignedWorker, holidayIndex] =
+          this.#assignHolidayWorker(
+            previousWorker,
+            assignedWorker,
+            holidayIndex
+          );
 
-      if (!day.dayOff) {
-        [assignedWorker, weekdayIndex] = this.#assignWeekdayWorker(
-          previousWorker,
-          assignedWorker,
-          weekdayIndex
-        ); // [assignedWorker, weekdayIndex]
-      }
-
-      if (assignedWorker === previousWorker) {
-        if (day.dayOff) {
+        if (assignedWorker === previousWorker) {
           assignedWorker = this.#resolveHoliday(holidayIndex);
         }
 
-        if (!day.dayOff) {
+        holidayIndex += 1;
+        previousWorker = assignedWorker;
+      }
+
+      // 평일일 때
+      if (!day.dayOff) {
+        [previousWorker, assignedWorker, weekdayIndex] =
+          this.#assignWeekdayWorker(
+            previousWorker,
+            assignedWorker,
+            weekdayIndex
+          );
+
+        if (assignedWorker === previousWorker) {
           assignedWorker = this.#resolveWeekday(weekdayIndex);
         }
+
+        weekdayIndex += 1;
+        previousWorker = assignedWorker;
       }
 
       const scheduleEntry = {
@@ -66,35 +74,34 @@ class WeekSchedule {
       }
 
       this.schedule.push(scheduleEntry);
-      previousWorker = assignedWorker;
     });
     return this.schedule;
   }
 
   #assignHolidayWorker(previousWorker, assignedWorker, holidayIndex) {
-    if (!previousWorker) {
+    if (holidayIndex === 0) {
       assignedWorker = this.#holidaySchedule[0];
     }
-    assignedWorker = this.#holidaySchedule.indexOf(
-      this.#holidaySchedule[(holidayIndex + 1) % this.#holidaySchedule.length]
-    );
 
-    holidayIndex = this.#holidaySchedule.indexOf(assignedWorker);
+    if (holidayIndex) {
+      assignedWorker =
+        this.#holidaySchedule[holidayIndex % this.#holidaySchedule.length];
+    }
 
-    return [assignedWorker, holidayIndex];
+    return [previousWorker, assignedWorker, holidayIndex];
   }
 
   #assignWeekdayWorker(previousWorker, assignedWorker, weekdayIndex) {
-    if (!previousWorker) {
+    if (weekdayIndex === 0) {
       assignedWorker = this.#weekdaySchedule[0];
     }
-    assignedWorker = this.#weekdaySchedule.indexOf(
-      this.#weekdaySchedule[(weekdayIndex + 1) % this.#weekdaySchedule.length]
-    );
 
-    weekdayIndex = this.#weekdaySchedule.indexOf(assignedWorker);
+    if (weekdayIndex) {
+      assignedWorker =
+        this.#weekdaySchedule[weekdayIndex % this.#weekdaySchedule.length];
+    }
 
-    return [assignedWorker, weekdayIndex];
+    return [previousWorker, assignedWorker, weekdayIndex];
   }
 
   #resolveHoliday(holidayIndex) {

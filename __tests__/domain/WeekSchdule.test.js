@@ -26,8 +26,6 @@ describe('WeekSchedule 클래스', () => {
     // given
     const schedule = weekSchedule.assignWorkers(days);
 
-    console.log(schedule);
-
     // when...then
     expect(schedule[0].worker).toBe('준팍');
     expect(schedule[1].worker).toBe('도밥');
@@ -43,7 +41,7 @@ describe('WeekSchedule 클래스', () => {
 
     // when...then
     expect(schedule[3].worker).toBe('수아');
-    expect(schedule[4].worker).toBe('루아');
+    expect(schedule[4].worker).toBe('루루');
   });
 
   test('assignWorkers는 연속 근무를 방지한다.', () => {
