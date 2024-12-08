@@ -5,6 +5,7 @@ class WeekSchedule {
   #originalWeekdaySchedule;
 
   constructor({ weekdayShift, holidayShift }) {
+    // note: 객체 구조분해할당은 key와 이름 같아야함
     this.#weekdaySchedule = weekdayShift;
     this.#holidaySchedule = holidayShift;
     console.log(this.#weekdaySchedule);

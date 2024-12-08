@@ -2,14 +2,16 @@ import WeekSchedule from '../../src/domain/WeekSchedule.js';
 import Day from '../../src/domain/Day.js';
 
 describe('WeekSchedule 클래스', () => {
-  const weekdaySchedule = ['준팍', '도밥', '고니'];
-  const holidaySchedule = ['수아', '루루', '글로'];
+  const shiftOrder = {
+    weekdayShift: ['준팍', '도밥', '고니'],
+    holidayShift: ['수아', '루루', '글로'],
+  };
 
   let weekSchedule;
   let days;
 
   beforeEach(() => {
-    weekSchedule = new WeekSchedule({ weekdaySchedule, holidaySchedule });
+    weekSchedule = new WeekSchedule(shiftOrder);
 
     days = [
       new Day({ date: new Date(2024, 4, 1), weekday: '수', dayOff: false }), // 평일
