@@ -27,7 +27,12 @@ class App {
   async getShiftOrder() {}
 
   // 평일 비상 근무 순번대로 사원 닉네임을 입력하세요> 준팍,도밥,고니,수아,루루,글로
-  async getWeekdayShiftOrder() {}
+  async getWeekdayShiftOrder() {
+    const weekdayShift = await ConsoleInput.read(
+      '평일 비상 근무 순번대로 사원 닉네임을 입력하세요\n'
+    );
+    return weekdayShift.split(',').map((worker) => worker.trim());
+  }
 
   // 휴일 비상 근무 순번대로 사원 닉네임을 입력하세요> 수아,수아,글로,고니,도밥,준팍
   async getHolidayShiftOrder() {}
