@@ -29,8 +29,3 @@ class Calendar {
 }
 
 export default Calendar;
-
-const calendar = new Calendar([5, '월']); // 5월, 월요일 시작
-const days = calendar.generateMonthDays();
-
-console.log(days[0].dateArray);
