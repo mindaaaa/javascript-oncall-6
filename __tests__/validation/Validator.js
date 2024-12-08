@@ -98,5 +98,16 @@ describe('Validator 클래스 테스트', () => {
         validator.validateDutyRoster();
       }).toThrow('[ERROR]');
     });
+
+    test('validateDutyRoster는 사원이 중복 등장하면 에러를 던진다.', () => {
+      // given
+      const inputArray = ['수아', '수아', '글로', '고니', '도밥', '준팍'];
+      validator = new Validator(inputArray);
+
+      // when...then
+      expect(() => {
+        validator.validateDutyRoster();
+      }).toThrow('[ERROR]');
+    });
   });
 });
