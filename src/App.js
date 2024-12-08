@@ -35,7 +35,12 @@ class App {
   }
 
   // 휴일 비상 근무 순번대로 사원 닉네임을 입력하세요> 수아,수아,글로,고니,도밥,준팍
-  async getHolidayShiftOrder() {}
+  async getHolidayShiftOrder() {
+    const holidayShift = await ConsoleInput.read(
+      '휴일 비상 근무 순번대로 사원 닉네임을 입력하세요\n'
+    );
+    return holidayShift.split(',').map((worker) => worker.trim());
+  }
 }
 
 export default App;
