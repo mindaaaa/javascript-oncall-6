@@ -38,7 +38,29 @@ class App {
   }
 
   // TODO: 평일 순번 또는 휴일 순번의 입력 값이 올바르지 않은 경우, '평일 순번'부터 다시 입력 받는다.
-  async #getShiftOrder() {}
+  async getValidatedShiftOrder() {
+    while (true) {
+      try {
+        const shiftOrder = await this.#getShiftOrder();
+
+        const validator = new Validator();
+        Object.values(shiftOrder).forEach((shift) => {
+          validator.validateDutyRoster(shift);
+        });
+
+        return shiftOrder;
+      } catch (error) {
+        ConsoleOutput.write(error.message);
+      }
+    }
+  }
+
+  async #getShiftOrder() {
+    const weekdayShift = this.#getWeekdayShiftOrder();
+    const holidayShift = this.#getHolidayShiftOrder();
+
+    return { weekdayShift, holidayShift };
+  }
 
   // 평일 비상 근무 순번대로 사원 닉네임을 입력하세요> 준팍,도밥,고니,수아,루루,글로
   async #getWeekdayShiftOrder() {
