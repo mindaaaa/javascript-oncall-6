@@ -7,14 +7,30 @@ import Validator from './validation/Validator';
 class App {
   async run() {
     try {
+      const monthAndDay = await this.getMonthAndDay();
+      const [weekdaySchedule, holidaySchedule] = this.getShiftOrder();
     } catch (error) {}
   }
 
-  async getMonthAndDay() {}
+  //   비상 근무를 배정할 월과 시작 요일을 입력하세요> 1,금
+  async getMonthAndDay() {
+    const monthAndStartDay = await ConsoleInput.read(
+      '비상 근무를 배정할 월과 시작 요일을 입력하세요\n'
+    );
+    const [month, startDay] = monthAndStartDay
+      .split(',')
+      .map((item) => item.trim());
+    return [Number(month), startDay];
+  }
 
-  async getWeekdaySchedule() {}
+  // TODO: 평일 순번 또는 휴일 순번의 입력 값이 올바르지 않은 경우, '평일 순번'부터 다시 입력 받는다.
+  async getShiftOrder() {}
 
-  async getHolidaySchedule() {}
+  // 평일 비상 근무 순번대로 사원 닉네임을 입력하세요> 준팍,도밥,고니,수아,루루,글로
+  async getWeekdayShiftOrder() {}
+
+  // 휴일 비상 근무 순번대로 사원 닉네임을 입력하세요> 수아,수아,글로,고니,도밥,준팍
+  async getHolidayShiftOrder() {}
 }
 
 export default App;
