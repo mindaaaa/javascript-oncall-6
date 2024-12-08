@@ -33,6 +33,12 @@ class Validator {
         '[ERROR] 비효율적인 운영을 막기 위해 최대 35명이 넘지 않도록 해주세요.'
       );
     }
+
+    if (!this.#isValidateUniqueValues()) {
+      throw new Error(
+        '[ERROR] 유효하지 않은 입력 값입니다. 다시 입력해 주세요.'
+      );
+    }
   }
 
   #isValidateMonthRange() {
@@ -54,6 +60,11 @@ class Validator {
 
   #isValidateMaximumWorkers() {
     return this.#inputArray.length <= 35;
+  }
+
+  #isValidateUniqueValues() {
+    const uniqueValues = new Set(this.#inputArray);
+    return uniqueValues.length === this.#inputArray.length;
   }
 }
 
