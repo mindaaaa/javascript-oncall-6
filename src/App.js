@@ -9,7 +9,7 @@ class App {
     try {
       const monthAndDay = await this.getValidatedMonthAndDay();
       const calendar = new Calendar(monthAndDay); // 객체배열: new Day({ date, weekday }
-      const shiftOrder = this.getValidatedShiftOrder();
+      const shiftOrder = await this.getValidatedShiftOrder();
       const weekSchedule = new WeekSchedule(shiftOrder);
 
       const scheduleEntries = weekSchedule.assignWorkers(calendar); // 배열 객체
@@ -57,13 +57,6 @@ class App {
     }
   }
 
-  printResult(scheduleEntry) {
-    ConsoleOutput.write(
-      `${scheduleEntry.month}월 ${scheduleEntry.day}일 ${scheduleEntry.weekday}${scheduleEntry.note} ${scheduleEntry.worker}`
-    );
-    ConsoleOutput.write('\n');
-  }
-
   async #getMonthAndDay() {
     const monthAndStartDay = await ConsoleInput.read(
       '비상 근무를 배정할 월과 시작 요일을 입력하세요\n'
@@ -75,8 +68,8 @@ class App {
   }
 
   async #getShiftOrder() {
-    const weekdayShift = this.#getWeekdayShiftOrder();
-    const holidayShift = this.#getHolidayShiftOrder();
+    const weekdayShift = await this.#getWeekdayShiftOrder();
+    const holidayShift = await this.#getHolidayShiftOrder();
 
     return { weekdayShift, holidayShift };
   }
@@ -95,6 +88,13 @@ class App {
       '휴일 비상 근무 순번대로 사원 닉네임을 입력하세요\n'
     );
     return holidayShift.split(',').map((worker) => worker.trim());
+  }
+
+  printResult(scheduleEntry) {
+    ConsoleOutput.write(
+      `${scheduleEntry.month}월 ${scheduleEntry.day}일 ${scheduleEntry.weekday}${scheduleEntry.note} ${scheduleEntry.worker}`
+    );
+    ConsoleOutput.write('\n');
   }
 }
 
