@@ -9,6 +9,7 @@ class App {
     const monthAndDay = await this.getValidatedMonthAndDay();
     const calendar = new Calendar(monthAndDay).generateMonthDays(); // 객체배열: new Day({ date, weekday }
     const shiftOrder = await this.getValidatedShiftOrder();
+    console.log(shiftOrder);
   }
 
   // [Number(month), startDay];
@@ -39,7 +40,7 @@ class App {
   async getValidatedShiftOrder() {
     while (true) {
       try {
-        const shiftOrder = await this.getShiftOrder();
+        const shiftOrder = await this.#getShiftOrder();
 
         Object.values(shiftOrder).forEach((shift) => {
           const validator = new Validator(shift);
@@ -53,7 +54,7 @@ class App {
     }
   }
 
-  async getShiftOrder() {
+  async #getShiftOrder() {
     const weekdayShift = await this.#getWeekdayShiftOrder();
     const holidayShift = await this.#getHolidayShiftOrder();
 

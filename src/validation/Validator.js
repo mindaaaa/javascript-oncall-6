@@ -62,9 +62,10 @@ class Validator {
     return this.#inputArray.length <= 35;
   }
 
+  // note: Set은 size를 가진다.
   #isValidateUniqueValues() {
     const uniqueValues = new Set(this.#inputArray);
-    return uniqueValues.length === this.#inputArray.length;
+    return uniqueValues.size === this.#inputArray.length;
   }
 }
 
