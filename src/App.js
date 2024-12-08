@@ -92,7 +92,9 @@ class App {
 
   printResult(scheduleEntry) {
     ConsoleOutput.write(
-      `${scheduleEntry.month}월 ${scheduleEntry.day}일 ${scheduleEntry.weekday}${scheduleEntry.note} ${scheduleEntry.worker}`
+      `${scheduleEntry.month}월 ${scheduleEntry.day}일 ${
+        scheduleEntry.weekday
+      }${scheduleEntry.note || ''} ${scheduleEntry.worker}`
     );
     ConsoleOutput.write('\n');
   }
