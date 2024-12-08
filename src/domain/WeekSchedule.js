@@ -4,9 +4,12 @@ class WeekSchedule {
   #originalHolidaySchedule;
   #originalWeekdaySchedule;
 
-  constructor({ weekdaySchedule, holidaySchedule }) {
-    this.#weekdaySchedule = weekdaySchedule;
-    this.#holidaySchedule = holidaySchedule;
+  constructor({ weekdayShift, holidayShift }) {
+    this.#weekdaySchedule = weekdayShift;
+    this.#holidaySchedule = holidayShift;
+    console.log(this.#weekdaySchedule);
+    console.log(this.#holidaySchedule);
+
     this.#originalWeekdaySchedule = this.#weekdaySchedule;
     this.#originalHolidaySchedule = this.#holidaySchedule;
     this.schedule = [];

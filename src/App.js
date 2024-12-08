@@ -7,7 +7,7 @@ import Validator from './validation/Validator.js';
 class App {
   async run() {
     const monthAndDay = await this.getValidatedMonthAndDay();
-    const calendar = new Calendar(monthAndDay).generateMonthDays(); // 배열객체: [new Day({ date, weekday }]
+    const calendar = new Calendar(monthAndDay).generateMonthDays(); // 객체배열: new Day({ date, weekday }
     const shiftOrder = await this.getValidatedShiftOrder();
     const weekSchedule = new WeekSchedule(shiftOrder);
 
@@ -32,27 +32,6 @@ class App {
     }
   }
 
-  // const shiftOrder = {
-  //   weekdayShift: ['준팍', '도밥', '고니'],
-  //   holidayShift: ['수아', '루루', '글로']
-  // };
-  async getValidatedShiftOrder() {
-    while (true) {
-      try {
-        const shiftOrder = await this.#getShiftOrder();
-
-        const validator = new Validator();
-        Object.values(shiftOrder).forEach((shift) => {
-          validator.validateDutyRoster(shift);
-        });
-
-        return shiftOrder;
-      } catch (error) {
-        ConsoleOutput.writeError(error.message);
-      }
-    }
-  }
-
   async #getMonthAndDay() {
     const monthAndStartDay = await ConsoleInput.read(
       '비상 근무를 배정할 월과 시작 요일을 입력하세요\n'
@@ -61,6 +40,23 @@ class App {
       .split(',')
       .map((item) => item.trim());
     return [Number(month), startDay];
+  }
+
+  async getValidatedShiftOrder() {
+    while (true) {
+      try {
+        const shiftOrder = await this.#getShiftOrder();
+
+        Object.values(shiftOrder).forEach((shift) => {
+          const validator = new Validator(shift);
+          validator.validateDutyRoster();
+        });
+
+        return shiftOrder;
+      } catch (error) {
+        ConsoleOutput.writeError(error.message);
+      }
+    }
   }
 
   async #getShiftOrder() {
@@ -92,7 +88,6 @@ class App {
         scheduleEntry.weekday
       }${scheduleEntry.note || ''} ${scheduleEntry.worker}`
     );
-    ConsoleOutput.write('\n');
   }
 }
 
