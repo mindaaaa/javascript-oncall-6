@@ -7,9 +7,18 @@ import Validator from './validation/Validator';
 class App {
   async run() {
     try {
-      const monthAndDay = await this.getMonthAndDay();
-      const [weekdaySchedule, holidaySchedule] = this.getShiftOrder();
-    } catch (error) {}
+      const monthAndDay = await this.getValidatedMonthAndDay();
+      const calendar = new Calendar(monthAndDay); // 객체배열: new Day({ date, weekday }
+      const shiftOrder = this.getValidatedShiftOrder();
+      const weekSchedule = new WeekSchedule(shiftOrder);
+
+      const scheduleEntries = weekSchedule.assignWorkers(calendar); // 배열 객체
+      scheduleEntries.forEach((entry) => {
+        this.printResult(entry);
+      });
+    } catch (error) {
+      ConsoleOutput.writeError();
+    }
   }
 
   // [Number(month), startDay];
@@ -22,22 +31,15 @@ class App {
 
         return monthAndDay;
       } catch (error) {
-        ConsoleOutput.write(error.message);
+        ConsoleOutput.writeError(error.message);
       }
     }
   }
 
-  async #getMonthAndDay() {
-    const monthAndStartDay = await ConsoleInput.read(
-      '비상 근무를 배정할 월과 시작 요일을 입력하세요\n'
-    );
-    const [month, startDay] = monthAndStartDay
-      .split(',')
-      .map((item) => item.trim());
-    return [Number(month), startDay];
-  }
-
-  // TODO: 평일 순번 또는 휴일 순번의 입력 값이 올바르지 않은 경우, '평일 순번'부터 다시 입력 받는다.
+  // const shiftOrder = {
+  //   weekdayShift: ['준팍', '도밥', '고니'],
+  //   holidayShift: ['수아', '루루', '글로']
+  // };
   async getValidatedShiftOrder() {
     while (true) {
       try {
@@ -50,9 +52,26 @@ class App {
 
         return shiftOrder;
       } catch (error) {
-        ConsoleOutput.write(error.message);
+        ConsoleOutput.writeError(error.message);
       }
     }
+  }
+
+  printResult(scheduleEntry) {
+    ConsoleOutput.write(
+      `${scheduleEntry.month}월 ${scheduleEntry.day}일 ${scheduleEntry.weekday}${scheduleEntry.note} ${scheduleEntry.worker}`
+    );
+    ConsoleOutput.write('\n');
+  }
+
+  async #getMonthAndDay() {
+    const monthAndStartDay = await ConsoleInput.read(
+      '비상 근무를 배정할 월과 시작 요일을 입력하세요\n'
+    );
+    const [month, startDay] = monthAndStartDay
+      .split(',')
+      .map((item) => item.trim());
+    return [Number(month), startDay];
   }
 
   async #getShiftOrder() {

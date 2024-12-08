@@ -153,6 +153,7 @@ class WeekSchedule {
       day: day.dateArray[1],
       weekday: day.weekday,
       worker: assignedWorker,
+      note: null,
     };
 
     if (day.isHoliday()) {
